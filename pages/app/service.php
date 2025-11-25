@@ -5,7 +5,7 @@ $service = mysqli_fetch_all($query, MYSQLI_ASSOC);
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
     $delete = mysqli_query($config, "DELETE FROM  services WHERE id = '$id'");
-    header("location:?page=service&hapus=berhasil");
+    header("location:?page=app/service&hapus=berhasil");
 }
 ?>
 
@@ -15,7 +15,7 @@ if (isset($_GET['delete'])) {
             <div class="card-body">
                 <h3 class="card-title">Services</h3>
                 <div class="mb-3" align="right">
-                    <a class="btn btn-primary" href="?page=tambah-service"><i class="bi bi-plus-circle"></i> Add Services</a>
+                    <a class="btn btn-primary" href="?page=add/tambah-service"><i class="bi bi-plus-circle"></i> Add Services</a>
                 </div>
 
                 <table class="table table-bordered table-striped datatable">
@@ -38,10 +38,10 @@ if (isset($_GET['delete'])) {
                                 <td><?php echo $s['price'] ?></td>
                                 <td><?php echo $s['description'] ?></td>
                                 <td>
-                                    <a class="btn btn-success" href="?page=tambah-service&edit=<?php echo $s['id'] ?>">
+                                    <a class="btn btn-success" href="?page=add/tambah-service&edit=<?php echo $s['id'] ?>">
                                         <i class="bi bi-pencil"></i>
                                     </a>
-                                    <a class="btn btn-danger" onclick="return confirm('Apakah anda yakin akan menghapus data ini?')" href="?page=service&delete=<?php echo $s['id'] ?>">
+                                    <a class="btn btn-danger" onclick="return confirm('Apakah anda yakin akan menghapus data ini?')" href="?page=app/service&delete=<?php echo $s['id'] ?>">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </td>

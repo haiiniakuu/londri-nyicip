@@ -6,7 +6,7 @@ $levels = mysqli_fetch_all($query, MYSQLI_ASSOC);
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
     $delete = mysqli_query($config, "DELETE FROM levels WHERE id = $id");
-    header("location:?page=level&hapus=berhasil");
+    header("location:?page=app/level&hapus=berhasil");
 }
 ?>
 
@@ -16,7 +16,7 @@ if (isset($_GET['delete'])) {
             <div class="card-header">
                 <h3 class="card-title">Levels</h3>
                 <div class="mb-3" align="right">
-                    <a class="btn btn-primary" href="?page=tambah-level"><i class="bi bi-plus-circle"></i> Add Level</a>
+                    <a class="btn btn-primary" href="?page=add/tambah-level"><i class="bi bi-plus-circle"></i> Add Level</a>
                 </div>
 
                 <table class="table table-bordered table-striped">
@@ -35,10 +35,13 @@ if (isset($_GET['delete'])) {
                                 <td><?php echo $key + 1 ?></td>
                                 <td><?php echo $lvl['level_name'] ?></td>
                                 <td>
-                                    <a class="btn btn-success" href="?page=tambah-level&&edit=<?php echo $lvl['id'] ?>">
+                                    <a class="btn btn-warning" href="?page=add/tambah-role&edit=<?php echo $lvl['id'] ?>">
+                                        <i class="bi bi-plus-circle"></i>
+                                    </a>
+                                    <a class="btn btn-success" href="?page=add/tambah-level&edit=<?php echo $lvl['id'] ?>">
                                         <i class="bi bi-pencil"></i>
                                     </a>
-                                    <a class="btn btn-danger" onclick="return confirm('Apakah anda yakin akan menghapus data ini?')" href="?page=level&&delete=<?php echo $lvl['id'] ?>">
+                                    <a class="btn btn-danger" onclick="return confirm('Apakah anda yakin akan menghapus data ini?')" href="?page=app/level&&delete=<?php echo $lvl['id'] ?>">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </td>

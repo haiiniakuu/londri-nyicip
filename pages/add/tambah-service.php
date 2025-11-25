@@ -10,7 +10,7 @@ if (isset($_POST['update'])) {
     $description = $_POST['description'];
 
     $update = mysqli_query($config, "UPDATE services SET name= '$name', price= '$price', description= '$description' WHERE id = '$id'");
-    header("location:?page=service&&ubah=berhasil");
+    header("location:?page=app/service&&ubah=berhasil");
 }
 
 if (isset($_POST['simpan'])) {
@@ -19,7 +19,7 @@ if (isset($_POST['simpan'])) {
     $description = $_POST['description'];
 
     $query = mysqli_query($config, "INSERT INTO services (name, price, description) Values ('$name', '$price','$description')");
-    header("location:?page=service");
+    header("location:?page=app/service");
 }
 ?>
 
@@ -51,7 +51,7 @@ if (isset($_POST['simpan'])) {
                         <button class="btn btn-primary" type="submit" name="<?php echo ($id) ? 'update' : 'simpan' ?>">
                             <?php echo ($id) ? 'simpan perubahan' : 'simpan' ?>
                         </button>
-                        <a href="?page=service" class="btn btn-secondary">Back</a>
+                        <a href="?page=app/service" class="btn btn-secondary">Back</a>
                     </div>
                 </form>
             </div>

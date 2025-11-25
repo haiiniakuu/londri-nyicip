@@ -6,9 +6,9 @@ $level = mysqli_fetch_assoc($queryEdit);
 
 if (isset($_POST['simpan'])) {
     $level_name = $_POST['level_name'];
-    
+
     $insert = mysqli_query($config, "INSERT INTO levels (level_name) VALUES ('$level_name')");
-    header("location:?page=level");
+    header("location:?page=app/level");
 }
 
 
@@ -16,7 +16,7 @@ if (isset($_POST['simpan'])) {
 if (isset($_POST['update'])) {
     $level_name = $_POST['level_name'];
     $update = mysqli_query($config, "UPDATE levels SET level_name = '$level_name' WHERE id = '$id'");
-    header("location:?page=level");
+    header("location:?page=app/level");
 }
 ?>
 
@@ -38,7 +38,7 @@ if (isset($_POST['update'])) {
                         <button class="btn btn-primary" type="submit" name="<?php echo ($id) ? 'update' : 'simpan' ?>">
                             <?php echo ($id) ? 'simpan perubahan' : 'simpan' ?>
                         </button>
-                        <a href="?page=level" class="btn btn-secondary">Back</a>
+                        <a href="?page=app/level" class="btn btn-secondary">Back</a>
                     </div>
                 </form>
             </div>

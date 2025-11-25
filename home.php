@@ -1,9 +1,37 @@
 <?php
 session_start();
+ob_start();
 include 'inc/functions.php';
 require_once "config/config.php";
 
 checkLogin();
+
+//login sebagai operator, cuma bisa buka menu transaksi
+//operator mencoba membuka dari url
+
+// $currentPage = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
+// if ($currentPage == 'dashboard') {
+//     return;
+// }
+// $level_id = $_SESSION['LEVEL_ID'] ?? '';
+
+// $query = mysqli_query($config, "SELECT * FROM menus JOIN role_menus ON role_menus.id_menu = menus.id WHERE id_level ='$level_id' ");
+// $rows = mysqli_fetch_all($query, MYSQLI_ASSOC);
+
+// $allowed_role = false;
+// foreach ($rows as $row) {
+//     if ($row['link'] == $currentPage) {
+//         $allowed_role = true;
+//         break;
+//     }
+// }
+
+// if ($allowed_role) {
+//     echo "<h1>Akses Failed !!</h1>";
+//     echo "Anda tidak memiliki hak akses ke halaman " . ucfirst($currentPage);
+//     echo "<a href='home.php?page=app/dashboard'>Back to Dashboard</a>";
+// }
+
 ?>
 
 <!DOCTYPE html>
@@ -66,7 +94,7 @@ checkLogin();
                 include 'pages/notfound.php';
             }
         } else {
-            include 'pages/dashboard.php';
+            include 'pages/app/dashboard.php';
         }
         ?>
 

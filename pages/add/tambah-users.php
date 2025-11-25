@@ -4,19 +4,23 @@ $id = isset($_GET['edit']) ? $_GET['edit'] : '';
 $queryEdit = mysqli_query($config, "SELECT * FROM users WHERE id='$id'");
 $rowEdit = mysqli_fetch_assoc($queryEdit);
 
+$queryLevels = mysqli_query($config, "SELECT * FROM levels ORDER BY id DESC");
+$rowLevels =  mysqli_fetch_all($queryLevels, MYSQLI_ASSOC);
+
 if (isset($_POST['update'])) {
     $name = $_POST['name'];
+    $id_level = $_POST['id_level'];
     $email = $_POST['email'];
     $password = sha1($_POST['password']);
 
     if ($password) {
-        $query = mysqli_query($config, "UPDATE users SET name= '$name',email= '$email',password= '$password' WHERE id='$id'");
+        $query = mysqli_query($config, "UPDATE users SET name= '$name', id_level= '$id_level', email= '$email', password= '$password' WHERE id='$id'");
     } else {
-        $query = mysqli_query($config, "UPDATE users SET name= '$name',email= '$email' WHERE id='$id'");
+        $query = mysqli_query($config, "UPDATE users SET name= '$name', id_level= '$id_level', email= '$email' WHERE id='$id'");
     }
 
     if ($query) {
-        header("location:?page=users&&ubah=berhasil");
+        header("location:?page=app/users&&ubah=berhasil");
     }
 }
 
@@ -25,10 +29,10 @@ if (isset($_POST['simpan'])) {
     $email = $_POST['email'];
     $password = sha1($_POST['password']);
 
-    $query = mysqli_query($config, "INSERT INTO users(name, email, password) Values ('$name', '$email','$password')");
+    $query = mysqli_query($config, "INSERT INTO users(name, email, id_level, password) Values ('$name', '$email', '$id_level', '$password')");
 
     if ($query) {
-        header("location:?page=users&&tambah=berhasil");
+        header("location:?page=app/users&&tambah=berhasil");
     }
 }
 ?>
@@ -43,8 +47,18 @@ if (isset($_POST['simpan'])) {
 
                 <form action="#" method="post">
                     <div class="mb-3">
-                        <label for="" class="form-label">Nama</label>
+                        <label for="" class="form-label">Name</label>
                         <input class="form-control" type="text" name="name" placeholder="Enter your name" required value="<?php echo $rowEdit['name'] ?? '' ?>">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="" class="form-label">Level Name</label>
+                        <select name="id_level" id="" class="form-control">
+                            <option value="">Choose One</option>
+                            <?php foreach ($rowLevels as $rl): ?>
+                                <option <?php echo $rowEdit['id_level'] ? 'selected' : '' ?> value="<?php echo $rl['id'] ?>"><?php echo $rl['level_name'] ?></option>
+                            <?php endforeach ?>
+                        </select>
                     </div>
 
                     <div class=" mb-3">
@@ -61,7 +75,7 @@ if (isset($_POST['simpan'])) {
                         <button class="btn btn-primary" type="submit" name="<?php echo ($id) ? 'update' : 'simpan' ?>">
                             <?php echo ($id) ? 'simpan perubahan' : 'simpan' ?>
                         </button>
-                        <a href="?page=users" class="btn btn-secondary">Back</a>
+                        <a href="?page=app/users" class="btn btn-secondary">Back</a>
                     </div>
                 </form>
             </div>
