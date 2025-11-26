@@ -26,6 +26,7 @@ if (isset($_POST['update'])) {
 
 if (isset($_POST['simpan'])) {
     $name = $_POST['name'];
+    $id_level = $_POST['id_level'];
     $email = $_POST['email'];
     $password = sha1($_POST['password']);
 
@@ -56,7 +57,7 @@ if (isset($_POST['simpan'])) {
                         <select name="id_level" id="" class="form-control">
                             <option value="">Choose One</option>
                             <?php foreach ($rowLevels as $rl): ?>
-                                <option <?php echo $rowEdit['id_level'] ? 'selected' : '' ?> value="<?php echo $rl['id'] ?>"><?php echo $rl['level_name'] ?></option>
+                                <option <?php echo $rl['id'] ? 'selected' : '' ?> value="<?php echo $rl['id'] ?>"><?php echo $rl['level_name'] ?></option>
                             <?php endforeach ?>
                         </select>
                     </div>

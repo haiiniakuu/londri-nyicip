@@ -28,7 +28,7 @@ if (isset($_POST['simpan'])) {
         <div class="card">
             <div class="card-body">
                 <h3 class="card-title">
-                    <?php echo isset($_GET['edit']) ? 'Edit' : 'Add' ?> User
+                    <?php echo isset($_GET['edit']) ? 'Edit' : 'Add' ?> Customer
                 </h3>
 
                 <form action="#" method="post">
