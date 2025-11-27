@@ -61,9 +61,8 @@
 
         .cart-header {
             background-color: white;
-            color: black;
-            box-shadow: 0 0 3px pink;
-            border: 1px solid violet;
+            box-shadow: 0 0 3px ;
+            /* border: 1px solid ; */
             padding: 20px;
         }
 
@@ -74,9 +73,7 @@
         }
 
         .cart-footer {
-            background-color: aqua;
             padding: 20px;
-            border-top: 10px solid violet;
         }
 
         .total-section {
@@ -87,7 +84,14 @@
 
         }
 
-        .btn-checout {
+        .btn-checkout {
+            border: none;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .btn-clear-cart {
             border: none;
             padding: 15px;
             font-size: 1.1rem;

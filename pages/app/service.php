@@ -35,7 +35,7 @@ if (isset($_GET['delete'])) {
                             <tr>
                                 <td><?php echo $key + 1 ?></td>
                                 <td><?php echo $s['name'] ?></td>
-                                <td><?php echo $s['price'] ?></td>
+                                <td>Rp. <?php echo number_format($s['price']) ?></td>
                                 <td><?php echo $s['description'] ?></td>
                                 <td>
                                     <a class="btn btn-success" href="?page=add/tambah-service&edit=<?php echo $s['id'] ?>">
