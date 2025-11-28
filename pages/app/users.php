@@ -18,7 +18,6 @@ if (isset($_GET['delete'])) {
                 <h3 class="card-title">Data User</h3>
                 <div class="mb-3" align="right">
                     <a class="btn btn-primary" href="?page=add/tambah-users"><i class="bi bi-plus-circle"></i> Add User</a>
-                    <a class="btn btn-warning" href="?page=add/restore-users"><i class="bi bi-plus-circle"></i> Restore User</a>
                 </div>
 
                 <table class="table table-bordered table-striped datatable">

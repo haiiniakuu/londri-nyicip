@@ -1,11 +1,12 @@
 <?php
 session_start();
 include "../config/config.php";
+
 $query = mysqli_query($config, "SELECT * FROM trans_order ORDER BY id DESC");
 $row = mysqli_fetch_assoc($query);
 
 $order_id = $row['id'];
-$queryDetails = mysqli_query($config, "SELECT p.product_name, od.* FROM trans_order_details od LEFT JOIN products p ON p.id = od.product_id WHERE order_id = '$order_id'");
+$queryDetails = mysqli_query($config, "SELECT s.name AS service_name, od.* FROM trans_order_details od LEFT JOIN services s ON s.id = od.id_service WHERE id_order = '$order_id'");
 $rowDetails = mysqli_fetch_all($queryDetails, MYSQLI_ASSOC);
 ?>
 
@@ -131,8 +132,8 @@ $rowDetails = mysqli_fetch_all($queryDetails, MYSQLI_ASSOC);
         <div class="info">
             <div class="info-row">
                 <?php
-                $date = date("d-m-Y", strtotime($row['create_at']));
-                $time = date("H:i:s", strtotime($row['create_at']));
+                $date = date("d-m-Y", strtotime($row['created_at']));
+                $time = date("H:i:s", strtotime($row['order_end_date']));
                 ?>
                 <span><?php echo $date ?></span>
                 <span><?php echo $time ?></span>
@@ -151,22 +152,25 @@ $rowDetails = mysqli_fetch_all($queryDetails, MYSQLI_ASSOC);
 
         <div class="items">
             <?php
-            foreach($rowDetails as $item) {
+            foreach ($rowDetails as $item) {
             ?>
                 <div class="item">
-                    <span class="item-name"><?php echo $item['product_name'] ?></span>
-                    <span class="item-qty"><?php echo $item['qty'] ?></span>
-                    <span class="item-price"><?php echo number_format($item['order_price'])  ?></span>
+                    <span class="item-name"><?php echo $item['service_name'] ?></span>
+                    <span class="item-qty"><?php echo number_format($item['qty'], 1) ?></span>
+                    <span class="item-price">Rp. <?php echo number_format($item['price']) ?></span>
                 </div>
             <?php } ?>
         </div>
 
         <div class="separator"></div>
         <div class="totals">
-            <div class="total-row ">
-                <span>Sub Total</span>
-                <span>Rp. 10.000</span>
-            </div>
+            <?php foreach ($rowDetails as $detail): ?>
+                <div class="total-row">
+                    <span>Sub Total</span>
+                    <span>Rp. <?php echo number_format($detail['subtotal']); ?></span>
+                </div>
+            <?php endforeach; ?>
+
             <div class="total-row">
                 <span>Ppn (Include)</span>
                 <span>10%</span>
@@ -177,7 +181,7 @@ $rowDetails = mysqli_fetch_all($queryDetails, MYSQLI_ASSOC);
         <div class="payment">
             <div class="total-row grand">
                 <span>Total</span>
-                <span>Rp. <?php echo $row['order_amount'] ?></span>
+                <span>Rp. <?php echo number_format($row['order_total']) ?></span>
             </div>
             <!-- <div class="total-row">
                 <span>Cash</span>

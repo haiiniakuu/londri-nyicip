@@ -31,7 +31,7 @@ if (isset($_POST['simpan'])) {
 
                 <form action="#" method="post">
                     <div class="mb-3">
-                        <label for="" class="form-label">Name</label>
+                        <label for="" class="form-label">Tax</label>
                         <input class="form-control" type="text" name="percent" placeholder="Enter your name" required value="<?php echo $rowEdit['percent'] ?? '' ?>">
                     </div>
 
@@ -45,7 +45,7 @@ if (isset($_POST['simpan'])) {
                         <button class="btn btn-primary" type="submit" name="<?php echo ($id) ? 'update' : 'simpan' ?>">
                             <?php echo ($id) ? 'simpan perubahan' : 'simpan' ?>
                         </button>
-                        <a href="?page=app/customer" class="btn btn-secondary">Back</a>
+                        <a href="?page=app/tax" class="btn btn-secondary">Back</a>
                     </div>
                 </form>
             </div>

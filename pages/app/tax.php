@@ -22,7 +22,7 @@ if (isset($_GET['delete'])) {
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Percent</th>
+                            <th>Tax</th>
                             <th>Is Active</th>
                             <th>Actions</th>
                         </tr>
@@ -33,8 +33,8 @@ if (isset($_GET['delete'])) {
                         ?>
                             <tr>
                                 <td><?php echo $key + 1 ?></td>
-                                <td><?php echo $t['percent'] ?></td>
-                                <td><?php echo $t['is_active'] == 1 ? 'Active' : 'Draft' ?></td>
+                                <td><?php echo $t['percent'] ?>%</td>
+                                <td><?php echo $t['is_active'] == 1 ? 'Active' : 'Draft' ?> </td>
                                 <td>
                                     <a class="btn btn-success" href="?page=add/tambah-tax&edit=<?php echo $t['id'] ?>">
                                         <i class="bi bi-pencil"></i>

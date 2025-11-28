@@ -8,7 +8,7 @@ function openModal(service) {
   document.getElementById('modal_id').value = service.id;
   document.getElementById('modal_name').value = service.name;
   document.getElementById('modal_price').value = service.price;
-  document.getElementById('modal_qty').value = 1;
+  document.getElementById('modal_qty').value = service.qty;
 
   new bootstrap.Modal('#exampleModal').show();
 }
@@ -18,13 +18,13 @@ let Cart = [];
 function addToCart() {
   const id = document.getElementById('modal_id').value;
   const name = document.getElementById('modal_name').value;
-  const price = parseInt(document.getElementById('modal_price').value);
-  const qty = parseInt(document.getElementById('modal_qty').value);
+  const price = parseFloat(document.getElementById('modal_price').value);
+  const qty = parseFloat(document.getElementById('modal_qty').value);
 
   const existing = Cart.find((item) => item.id == id);
   if (existing) {
     // alert("RORRR")
-    existing.quantity += qty;
+    existing.qty += qty;
   } else {
     Cart.push({
       id,
@@ -54,18 +54,17 @@ function renderCart() {
     div.innerHTML = `
                       <div>
                           <strong>${item.name}</strong>
-                          <small>Rp. ${item.price.toLocaleString('id-ID')}</small>
+                          <small>Rp. ${item.price.toLocaleString('id-ID')}/kg</small>
                       </div>
 
                       <div class="d-flex align-items-center">
-                          <button class="btn btn-outline-secondary me-2" onclick="changeQty(${item.id}, -1)">-</button>
-                          <span>${item.qty}</span>
-                          <button class="btn btn-outline-secondary ms-3" onclick="changeQty(${item.id}, 1)">+</button>
+                          <span>${Number(item.qty).toFixed(1)}</span>
                           <button class="btn btn-danger btn-sm ms-3" onclick="removeItem(${item.id})"><i class="bi bi-trash"></i></button>
                       </div>`;
     cartContainer.appendChild(div);
   });
   updateTotal();
+  calculateChange();
 }
 
 function removeItem(id) {
@@ -88,8 +87,17 @@ function changeQty(id, x) {
 }
 
 function updateTotal() {
-  const subtotal = Cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-  const tax = subtotal * 0.1;
+  const qty = parseFloat(document.getElementById('modal_qty').value) || 0;
+  const price = parseFloat(document.getElementById('modal_price').value) || 0;
+
+  // const subtotal = Cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const subtotal = price * qty;
+
+  const taxValue = document.querySelector(".tax").value;
+  let tax = taxValue / 100;
+  console.log(tax);
+
+  tax = subtotal * tax;
   const total = tax + subtotal;
 
   document.getElementById('subtotal').textContent = `Rp. ${subtotal.toLocaleString()}`;
@@ -117,27 +125,40 @@ async function processPayment() {
   const subtotal = document.querySelector('#subtotal_value').value.trim();
   const tax = document.querySelector('#tax_value').value.trim();
   const grandTotal = document.querySelector('#total_value').value.trim();
-  const customer_id = document.getElementById('id_customer').value;
+  const customer_id = parseInt(document.getElementById('id_customer').value);
   const end_date = document.getElementById('end_date').value;
+  const pay = document.getElementById('pay').value;
+  const change = document.getElementById('change').value;
+
+  console.log({ customer_id, end_date });
 
   try {
     const res = await fetch('add-order.php?payment', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ Cart, order_code, subtotal, tax, grandTotal, customer_id, end_date }),
+      body: JSON.stringify({ Cart, order_code, subtotal, tax, grandTotal, customer_id, end_date, pay, change }),
     });
+    console.log(res);
 
     const data = await res.json();
-
+    console.log(data);
     if (data.status == 'success') {
       alert('transaction success');
       window.location.href = 'print.php';
     } else {
       alert('transaction failled' + data.message);
     }
-    // console.log(res);
   } catch (error) {
     alert('ups transaksi fail');
     console.log('error', error);
   }
+}
+
+function calculateChange() {
+  const total = document.getElementById('total_value').value;
+  const pay = parseFloat(document.getElementById('pay').value);
+
+  let change = pay - total;
+  if (change < 0) change = 0;
+  document.getElementById('change').value = change > 0 ? change : "0";
 }

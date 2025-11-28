@@ -57,7 +57,7 @@ if (isset($_POST['simpan'])) {
                         <select name="id_level" id="" class="form-control">
                             <option value="">Choose One</option>
                             <?php foreach ($rowLevels as $rl): ?>
-                                <option <?php echo $rl['id'] ? 'selected' : '' ?> value="<?php echo $rl['id'] ?>"><?php echo $rl['level_name'] ?></option>
+                                <option  value="<?php echo $rl['id'] ?>"><?php echo $rl['level_name'] ?></option>
                             <?php endforeach ?>
                         </select>
                     </div>
@@ -68,7 +68,7 @@ if (isset($_POST['simpan'])) {
                     </div>
 
                     <div class=" mb-3">
-                        <label for="" class="form-label">Password <small>kosongkan jika ingin mengubah</small></label>
+                        <label for="" class="form-label">Password</label>
                         <input class="form-control" type="password" name="password" placeholder="Enter your password">
                     </div>
 

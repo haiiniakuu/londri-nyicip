@@ -6,6 +6,9 @@ $rowServices = mysqli_fetch_all($queryServices, MYSQLI_ASSOC);
 
 $queryCustomers = mysqli_query($config, "SELECT * FROM customers");
 $rowCustomers = mysqli_fetch_all($queryCustomers, MYSQLI_ASSOC);
+
+$queryTax = mysqli_query($config, "SELECT * FROM taxs WHERE is_active = 1 ORDER BY id DESC LIMIT 1");
+$rowTax = mysqli_fetch_assoc($queryTax);
 //query product
 // $queryProducts = mysqli_query($config, "SELECT s.name, p.* FROM products p LEFT JOIN categories c ON c.id = p.category_id");
 // $fetchProducts = mysqli_fetch_all($queryProducts, MYSQLI_ASSOC);
@@ -21,24 +24,32 @@ if (isset($_GET['payment'])) {
 
     $orderCode = $data['order_code'];
     $orderEndDate = $data['end_date'];
-    $orderStatus = 1;
-    $orderPay = 0;
-    $orderChange = 0;
+    $orderStatus = 0;
+    $orderPay = $data['pay'];
+    $orderChange = $data['change'];
     $tax = $data['tax'];
     $orderTotal = 0;
     $orderAmounth = $data['grandTotal'];
     $customer_id = $data['customer_id'];
-    
+
     $subtotal = $data['subtotal'];
 
     try {
         // code...
-        $insertOrder = mysqli_query($config, "INSERT INTO trans_order(order_code, order_end_date, order_status, order_pay, order_change, order_tax, order_total) 
-        VALUES ('$orderCode', '$orderEndDate', '$orderStatus', '$orderPay', '$orderChange', '$tax', '$orderAmounth') ");
+        $insertOrder = mysqli_query($config, "INSERT INTO trans_order(order_code, order_end_date, order_status, pay, `change`, tax, order_total, id_customer) 
+        VALUES ('$orderCode', '$orderEndDate', '$orderStatus', '$orderPay', '$orderChange', '$tax', '$orderAmounth', '$customer_id') ");
 
         if (!$insertOrder) {
             throw new Exception("insert failled to table orders", mysqli_error($config));
         }
+
+        // $insertOrder = mysqli_query($config, "INSERT INTO trans_order(order_code, order_end_date, order_status, opay, order_change, order_tax, order_total, id_customer) 
+        // VALUES ('$orderCode', '$orderEndDate', $orderStatus, $orderPay, $orderChange, $tax, $orderAmounth, $customer_id)");
+
+        // if (!$insertOrder) {
+        //     throw new Exception("insert failled to table orders", mysqli_error($config));
+        // }
+
 
         $idOrder = mysqli_insert_id($config);
         foreach ($cart as $v) {
@@ -47,7 +58,8 @@ if (isset($_GET['payment'])) {
             $order_price = $v['price'];
             $subtotal = $qty * $order_price;
 
-            $insertOrderDetails = mysqli_query($config, "INSERT INTO trans_order_details(id_order, id_service, qty, price,subtotal) VALUES ('$idOrder','$product_id', '$qty', '$order_price ', '$subtotal')");
+            $insertOrderDetails = mysqli_query($config, "INSERT INTO trans_order_details(id_order, id_service, qty, price,subtotal) 
+            VALUES ('$idOrder','$product_id', '$qty', '$order_price', '$subtotal')");
             if (!$insertOrderDetails) {
                 throw new Exception("insert failled to table orders", mysqli_error($config));
             }
@@ -59,7 +71,7 @@ if (isset($_GET['payment'])) {
             'id_order' => $idOrder,
             'order_code' => $orderCode
         ];
-        echo json_encode($response,);
+        echo json_encode($response);
     } catch (\Throwable $th) {
         mysqli_rollback($config);
         $response = ['status' => 'Error', 'message' => $th->getMessage()];
@@ -76,13 +88,13 @@ if (isset($_GET['payment'])) {
     return;
 }
 
-$orderNumbers = mysqli_query($config, "SELECT id FROM services ORDER BY id DESC LIMIT 1");
+$orderNumbers = mysqli_query($config, "SELECT id FROM trans_order ORDER BY id DESC LIMIT 1");
 $row = mysqli_fetch_assoc($orderNumbers);
 
 $nextId = $row ? $row['id'] + 1 : 1;
 
 
-$order_code = "ORD-" . DATE('dmY') . str_pad($nextId, 4, "0", STR_PAD_RIGHT);
+$order_code = "ORD-" . DATE('dmY') . str_pad($nextId, 4, "0", STR_PAD_LEFT);
 
 
 ?>
@@ -176,7 +188,7 @@ $order_code = "ORD-" . DATE('dmY') . str_pad($nextId, 4, "0", STR_PAD_RIGHT);
                                 </div>
                                 <div class="mb-3">
                                     <label for="" form-label>Weight / Qty</label>
-                                    <input type="number" name="modal_qty" placeholder="Weight / Qty" class="form-control" id="modal_qty">
+                                    <input type="number" name="modal_qty" placeholder="Weight / Qty" class="form-control" id="modal_qty" step="0.1" min="0">
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -208,14 +220,23 @@ $order_code = "ORD-" . DATE('dmY') . str_pad($nextId, 4, "0", STR_PAD_RIGHT);
                             <input type="hidden" id="subtotal_value">
                         </div>
                         <div class="d-flex justify-content-between mb-2">
-                            <span>Pajak (10%)</span>
+                            <span>Tax (<?php echo $rowTax['percent'] ?>%)</span>
                             <span id="tax">Rp. 0.0</span>
                             <input type="hidden" id="tax_value">
+                            <input type="hidden" class="tax" value="<?php echo $rowTax['percent'] ?>">
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span>Grandtotal</span>
                             <span id="total">Rp. 0.0</span>
                             <input type="hidden" id="total_value">
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Pay</span>
+                            <input type="number" id="pay" placeholder="Enter the payment amount" class="form-control w-50" oninput="calculateChange()">
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Change</span>
+                            <input type="number" id="change" class="form-control w-50" readonly>
                         </div>
                     </div>
                     <div class="row g-2">
